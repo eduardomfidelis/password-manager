@@ -1,4 +1,7 @@
-function Form() {
+type FormProps = {
+  cancelForm: () => void,
+};
+function Form({ cancelForm }: FormProps) {
   return (
     <div>
       <label htmlFor="serviço">Nome do serviço</label>
@@ -11,7 +14,7 @@ function Form() {
       <input type="text" id="url" />
 
       <button>Cadastrar</button>
-      <button>Cancelar</button>
+      <button onClick={ cancelForm }>Cancelar</button>
     </div>
   );
 }
