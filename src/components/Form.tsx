@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Display from './Display';
+import ServiceTypes from './ServiceTypes';
 
 const initialFormValue = {
   service: '',
@@ -7,17 +8,20 @@ const initialFormValue = {
   password: '',
   url: '',
 };
+
 const initialPasswordValue = {
   isMinLengthValid: false,
   isMaxLengthValid: false,
   isNumberAndLether: false,
   isSpecialCharacters: false,
 };
+
 type FormProps = {
-  cancelForm: () => void,
+  cancelForm: () => void;
+  addService: (service: ServiceTypes) => void;
 };
 
-function Form({ cancelForm }: FormProps) {
+function Form({ cancelForm, addService }: FormProps) {
   const [formValue, setFormValue] = useState(initialFormValue);
   const [formValidation, setFormValidation] = useState(false);
   const [passwordValidation, setPasswordValidation] = useState(initialPasswordValue);
@@ -34,6 +38,18 @@ function Form({ cancelForm }: FormProps) {
     validatePassword();
   };
 
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const newService: ServiceTypes = {
+      service,
+      login,
+      password,
+      url,
+    };
+    addService(newService);
+    setFormValue(initialFormValue);
+  };
+
   const validateForm = () => {
     const isServiceValid = service.trim() !== '';
     const isLoginValid = login.trim() !== '';
@@ -45,6 +61,7 @@ function Form({ cancelForm }: FormProps) {
 
     setFormValidation(isServiceValid && isPasswordValid && isLoginValid);
   };
+
   const validatePassword = () => {
     const isMinLengthValid = password.length >= 7;
     const isMaxLengthValid = password.length <= 15;
@@ -63,10 +80,12 @@ function Form({ cancelForm }: FormProps) {
     isMinLengthValid,
     isMaxLengthValid,
     isNumberAndLether,
-    isSpecialCharacters } = passwordValidation;
+    isSpecialCharacters,
+  } = passwordValidation;
+
   return (
     <div>
-      <form>
+      <form onSubmit={ handleSubmit }>
         <label htmlFor="service">Nome do serviço</label>
         <input
           type="text"
@@ -101,7 +120,9 @@ function Form({ cancelForm }: FormProps) {
         />
 
         <button disabled={ !formValidation }>Cadastrar</button>
-        <button onClick={ cancelForm }>Cancelar</button>
+        <button type="button" onClick={ cancelForm }>
+          Cancelar
+        </button>
       </form>
       <Display
         isMinLengthValid={ isMinLengthValid }
@@ -109,8 +130,8 @@ function Form({ cancelForm }: FormProps) {
         isNumberAndLether={ isNumberAndLether }
         isSpecialCharacters={ isSpecialCharacters }
       />
-
     </div>
   );
 }
+
 export default Form;
