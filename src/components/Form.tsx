@@ -25,6 +25,7 @@ function Form({ cancelForm, addService }: FormProps) {
   const [formValue, setFormValue] = useState(initialFormValue);
   const [formValidation, setFormValidation] = useState(false);
   const [passwordValidation, setPasswordValidation] = useState(initialPasswordValue);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { service, login, password, url } = formValue;
 
@@ -76,6 +77,10 @@ function Form({ cancelForm, addService }: FormProps) {
     });
   };
 
+  const handleShowPassword = (event : React.FormEvent) => {
+    event.preventDefault();
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
   const {
     isMinLengthValid,
     isMaxLengthValid,
@@ -104,7 +109,7 @@ function Form({ cancelForm, addService }: FormProps) {
         />
         <label htmlFor="password">Senha</label>
         <input
-          type="password"
+          type={ showPassword ? 'text' : 'password' }
           id="password"
           name="password"
           value={ password }
@@ -122,6 +127,13 @@ function Form({ cancelForm, addService }: FormProps) {
         <button disabled={ !formValidation }>Cadastrar</button>
         <button type="button" onClick={ cancelForm }>
           Cancelar
+        </button>
+        <button
+          data-testid="show-hide-form-password"
+          onClick={ handleShowPassword }
+        >
+          Esconder senhas
+
         </button>
       </form>
       <Display
